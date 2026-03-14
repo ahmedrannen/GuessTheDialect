@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>لهجة</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+
+    <!-- SCREEN 1: Intro -->
+    <div id="intro-screen">
+      <div id="intro-card">
+        <h1>لهجة 🗣️</h1>
+        <p id="intro-subtitle">اختبر معرفتك باللهجات العربية!</p>
+
+        <div id="rules">
+          <div class="rule">
+            <span class="rule-icon">🌍</span>
+            <span>كل جولة فيها كلمة من لهجة عربية مختلفة</span>
+          </div>
+          <div class="rule">
+            <span class="rule-icon">✅</span>
+            <span>إجابة صحيحة = 10 نقاط</span>
+          </div>
+          <div class="rule">
+            <span class="rule-icon">🔥</span>
+            <span>5 إجابات صح متتالية = 5 نقاط إضافية</span>
+          </div>
+          <div class="rule">
+            <span class="rule-icon">❌</span>
+            <span>إجابة غلط = 0 نقاط</span>
+          </div>
+        </div>
+
+        <button id="signin-btn">
+          <img src="https://www.google.com/favicon.ico" width="18" height="18" />
+          تسجيل الدخول بـ Google
+        </button>
+
+        <button id="start-btn">ابدأ اللعبة 🚀</button>
+
+        <button id="add-word-btn-intro">أضف كلمة من لهجتك ✍️</button>
+        <button id="leaderboard-btn">🏆 لوحة المتصدرين</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: Game -->
+    <div id="game-screen" style="display:none;">
+      <h1>لهجة</h1>
+
+      <div id="score-board">
+        <span>النقاط: <strong id="points">0</strong></span>
+        <span>🔥 <strong id="streak">0</strong></span>
+      </div>
+
+      <div id="word-card">
+        <p id="dialect-tag"></p>
+        <h2 id="word"></h2>
+      </div>
+
+      <div id="choices">
+        <button class="choice-btn"></button>
+        <button class="choice-btn"></button>
+        <button class="choice-btn"></button>
+        <button class="choice-btn"></button>
+      </div>
+
+      <p id="result"></p>
+    </div>
+
+    <!-- SCREEN 3: Word Submission -->
+    <div id="submit-screen" style="display:none;">
+      <div id="submit-card">
+        <h2>أضف كلمة جديدة ✍️</h2>
+        <p id="submit-subtitle">ساعد في تطوير اللعبة!</p>
+
+        <input type="text" id="input-word" placeholder="الكلمة بالعربي" />
+
+        <select id="input-region">
+          <option value="">اختر المنطقة</option>
+          <option value="tunisia">🇹🇳 تونس</option>
+          <option value="egypt">🇪🇬 مصر</option>
+          <option value="morocco">🇲🇦 المغرب</option>
+          <option value="algeria">🇩🇿 الجزائر</option>
+          <option value="libya">🇱🇾 ليبيا</option>
+          <option value="lebanon">🇱🇧 لبنان</option>
+          <option value="syria">🇸🇾 سوريا</option>
+          <option value="palestine">🇵🇸 فلسطين</option>
+          <option value="jordan">🇯🇴 الأردن</option>
+          <option value="iraq">🇮🇶 العراق</option>
+          <option value="saudi">🇸🇦 السعودية</option>
+          <option value="yemen">🇾🇪 اليمن</option>
+          <option value="kuwait">🇰🇼 الكويت</option>
+          <option value="uae">🇦🇪 الإمارات</option>
+          <option value="qatar">🇶🇦 قطر</option>
+          <option value="bahrain">🇧🇭 البحرين</option>
+          <option value="oman">🇴🇲 عُمان</option>
+          <option value="sudan">🇸🇩 السودان</option>
+          <option value="mauritania">🇲🇷 موريتانيا</option>
+          <option value="somalia">🇸🇴 الصومال</option>
+          <option value="djibouti">🇩🇯 جيبوتي</option>
+          <option value="comoros">🇰🇲 جزر القمر</option>
+        </select>
+
+        <input type="text" id="input-meaning" placeholder="معنى الكلمة بالعربي الفصيح" />
+
+        <p id="submit-result"></p>
+
+        <button id="submit-btn">أرسل الكلمة 🚀</button>
+        <button id="back-btn">العودة للعبة ↩️</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: Leaderboard -->
+  <div id="leaderboard-screen" style="display:none;">
+    <div id="leaderboard-card">
+      <h2>🏆 لوحة المتصدرين</h2>
+      <p id="leaderboard-subtitle">أفضل اللاعبين</p>
+
+    <div id="leaderboard-list">
+      <p style="color:#94a3b8;">جاري التحميل...</p>
+    </div>
+
+    <button id="leaderboard-back-btn">العودة ↩️</button>
+    </div>
+  </div>
+
+    <script src="words.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
