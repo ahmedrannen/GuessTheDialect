@@ -3,29 +3,6 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/f
 
 // API
 const SHEET_API = "https://script.google.com/macros/s/AKfycbx-HYNwFlclPSl6b0j-wnyR1Yy046EDUiUldJKiprS6uVORVZCG7DrUVQT3-wnw8Ml8nA/exec";
-// Load approved words from Google Sheets
-async function loadApprovedWords() {
-  try {
-    const response = await fetch(`${SHEET_API}?action=getApproved`);
-    const words = await response.json();
-    
-    if (words && words.length > 0) {
-      words.forEach(word => {
-        const dialect = word.region;
-        if (wordBank[dialect]) {
-          wordBank[dialect].push({
-            word: word.word,
-            dialect: word.dialect,
-            correct: word.correct,
-            choices: word.choices
-          });
-        }
-      });
-    }
-  } catch (error) {
-    console.error("Error loading approved words:", error);
-  }
-}
 
 // DOM Elements
 const wordEl = document.getElementById("word");
@@ -40,8 +17,51 @@ let currentIndex = 0;
 let score = 0;
 let points = 0;
 let streak = 0;
-let sessionWords = buildSession();
+let sessionWords = [];
 let currentUser = null;
+
+// Load approved words from Google Sheets
+async function loadApprovedWords() {
+  try {
+    const response = await fetch(`${SHEET_API}?action=getApproved`);
+    const words = await response.json();
+
+    if (words && words.length > 0) {
+      words.forEach(word => {
+        const region = word.region;
+
+        // Auto-generate fake answers from other words in the bank
+        const allCorrectAnswers = Object.values(wordBank)
+          .flat()
+          .map(w => w.correct)
+          .filter(c => c !== word.correct);
+
+        const shuffledAnswers = allCorrectAnswers
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 3);
+
+        const choices = [word.correct, ...shuffledAnswers]
+          .sort(() => Math.random() - 0.5);
+
+        const newWord = {
+          word: word.word,
+          dialect: `🌍 ${region}`,
+          correct: word.correct,
+          choices: choices
+        };
+
+        // Add to existing dialect or create new one
+        if (wordBank[region]) {
+          wordBank[region].push(newWord);
+        } else {
+          wordBank[region] = [newWord];
+        }
+      });
+    }
+  } catch (error) {
+    console.error("Error loading approved words:", error);
+  }
+}
 
 // Auth State
 onAuthStateChanged(auth, (user) => {
@@ -291,44 +311,9 @@ async function showLeaderboard() {
   }
 }
 
-async function loadApprovedWords() {
-  try {
-    const response = await fetch(`${SHEET_API}?action=getApproved`);
-    const words = await response.json();
-
-    if (words && words.length > 0) {
-      words.forEach(word => {
-        const region = word.region;
-
-        // Auto-generate fake answers from other words in the bank
-        const allCorrectAnswers = Object.values(wordBank)
-          .flat()
-          .map(w => w.correct)
-          .filter(c => c !== word.correct);
-
-        const shuffledAnswers = allCorrectAnswers
-          .sort(() => Math.random() - 0.5)
-          .slice(0, 3);
-
-        const choices = [word.correct, ...shuffledAnswers]
-          .sort(() => Math.random() - 0.5);
-
-        const newWord = {
-          word: word.word,
-          dialect: `🌍 ${region}`,
-          correct: word.correct,
-          choices: choices
-        };
-
-        // Add to existing dialect or create new one
-        if (wordBank[region]) {
-          wordBank[region].push(newWord);
-        } else {
-          wordBank[region] = [newWord];
-        }
-      });
-    }
-  } catch (error) {
-    console.error("Error loading approved words:", error);
-  }
-};
+// Initialize
+loadApprovedWords().then(() => {
+  sessionWords = buildSession();
+  loadWord();
+  updateScoreboard();
+});
